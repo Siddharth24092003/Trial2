@@ -504,6 +504,25 @@
                 Browse Image
               </button>
             </div>
+
+            <!-- Or input a Direct Image URL -->
+            <div class="mt-6 p-4 bg-stone-50/50 dark:bg-stone-950/40 rounded-2xl border border-stone-100 dark:border-stone-800/60 text-left">
+              <label for="photo-url-input" class="text-[10px] font-semibold uppercase tracking-wider text-stone-500 block mb-2">Or Paste Direct Image Link (Vercel & Offline Friendly)</label>
+              <div class="flex gap-2">
+                <input 
+                  type="url" 
+                  id="photo-url-input" 
+                  placeholder="https://example.com/photo.jpg"
+                  class="flex-grow px-3 py-2 bg-white dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl focus:outline-none focus:border-gold dark:focus:border-gold text-xs text-stone-900 dark:text-white"
+                />
+                <button id="save-photo-url-btn" class="px-3.5 py-2 bg-gold hover:bg-amber-500 text-stone-950 font-bold text-xs rounded-xl transition-all duration-300 shrink-0">
+                  Apply URL
+                </button>
+              </div>
+              <p class="text-[9px] text-stone-400 dark:text-stone-500 mt-2 leading-relaxed">
+                Tip: Upload her picture to <a href="https://postimages.org/" target="_blank" class="text-gold underline hover:text-amber-400">Postimages</a> or <a href="https://imgbb.com/" target="_blank" class="text-gold underline hover:text-amber-400">ImgBB</a> and paste the <strong>Direct Link</strong> here. This is perfect for Vercel/GitHub Pages because it is permanently saved in the cloud and works on all devices!
+              </p>
+            </div>
           </div>
           
           <div class="mt-8 pt-6 border-t border-stone-100 dark:border-stone-800/80 flex justify-between items-center text-xs text-stone-400">

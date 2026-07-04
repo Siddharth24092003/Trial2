@@ -736,7 +736,7 @@ function renderActiveFileDetails() {
       photoBadge.className = 'text-[10px] font-mono font-bold bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300 border border-green-500/20 px-2.5 py-0.5 rounded-full uppercase';
       photoNameEl.textContent = storedPhotoName || 'bauaa_custom.jpg';
       
-      if (storedPhotoBase64.startsWith('data:')) {
+      if (storedPhotoBase64.startsWith('data:') || storedPhotoBase64.startsWith('http://') || storedPhotoBase64.startsWith('https://')) {
         photoPreview.src = storedPhotoBase64;
       } else {
         photoPreview.src = `data:image/jpeg;base64,${storedPhotoBase64}`;
@@ -836,6 +836,27 @@ function handleFiles(files) {
       
       renderActiveFileDetails();
       showToast('✓ Letter uploaded successfully');
+
+      // Sync with full-stack backend
+      fetch('/api/upload-letter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          data: base64Data,
+          name: file.name,
+          size: file.size.toString()
+        })
+      })
+      .then(res => res.json())
+      .then(() => {
+        console.log('✓ Custom PDF letter synced to server successfully.');
+      })
+      .catch(err => {
+        console.warn('Could not sync PDF to server:', err);
+      });
+
     } catch (err) {
       console.error('File save error:', err);
       alert('File is too large or storage is full. Please try a smaller PDF file.');
@@ -856,6 +877,13 @@ function deleteLetter() {
     
     renderActiveFileDetails();
     showToast('✓ Letter deleted successfully');
+
+    // Sync with full-stack backend
+    fetch('/api/letter', {
+      method: 'DELETE'
+    })
+    .then(() => console.log('✓ Custom PDF letter deletion synced to server.'))
+    .catch(err => console.warn('Could not sync PDF deletion to server:', err));
   }
 }
 
@@ -956,6 +984,26 @@ function handlePhotoFiles(files) {
         
         renderActiveFileDetails();
         showToast('✓ Photo uploaded and optimized!');
+
+        // Sync with full-stack backend
+        fetch('/api/upload-photo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: dataUrl,
+            name: file.name
+          })
+        })
+        .then(res => res.json())
+        .then(() => {
+          console.log('✓ Photo synced to server database successfully.');
+        })
+        .catch(err => {
+          console.warn('Could not sync photo to server:', err);
+        });
+
       } catch (err) {
         console.error('Photo save error:', err);
         alert('Photo file size is too large or storage is full. Please try a smaller image.');
@@ -982,6 +1030,13 @@ function deletePhoto() {
     
     renderActiveFileDetails();
     showToast('✓ Custom photo removed');
+
+    // Sync with full-stack backend
+    fetch('/api/photo', {
+      method: 'DELETE'
+    })
+    .then(() => console.log('✓ Photo deletion synced to server.'))
+    .catch(err => console.warn('Could not sync photo deletion to server:', err));
   }
 }
 
@@ -1240,8 +1295,79 @@ function initDiagnostics() {
   });
 }
 
+// Synchronize client local state with full-stack backend
+function syncStateFromServer() {
+  fetch('/api/app-state')
+    .then(res => res.json())
+    .then(data => {
+      let needsRerender = false;
+
+      // 1. Photo Sync
+      if (data.has_photo && data.photo_data) {
+        const storedPhoto = localStorage.getItem('romantic_photo');
+        if (storedPhoto !== data.photo_data) {
+          localStorage.setItem('romantic_photo', data.photo_data);
+          localStorage.setItem('romantic_photo_name', data.photo_name || 'custom_photo.jpg');
+          needsRerender = true;
+
+          // Update main page photo instantly
+          const polaroidImg = document.getElementById('polaroid-img');
+          if (polaroidImg) {
+            polaroidImg.src = data.photo_data;
+          }
+          const photoPreview = document.getElementById('photo-preview');
+          if (photoPreview) {
+            photoPreview.src = data.photo_data;
+          }
+        }
+      } else {
+        if (localStorage.getItem('romantic_photo')) {
+          localStorage.removeItem('romantic_photo');
+          localStorage.removeItem('romantic_photo_name');
+          needsRerender = true;
+          const polaroidImg = document.getElementById('polaroid-img');
+          if (polaroidImg) {
+            polaroidImg.src = '/src/assets/images/bauaa_portrait_1783140747687.jpg';
+          }
+        }
+      }
+
+      // 2. PDF Letter Sync
+      if (data.has_pdf && data.pdf_data) {
+        const storedPdf = localStorage.getItem('romantic_pdf');
+        if (storedPdf !== data.pdf_data) {
+          localStorage.setItem('romantic_pdf', data.pdf_data);
+          localStorage.setItem('romantic_pdf_name', data.pdf_name || 'dear_bauaa.pdf');
+          localStorage.setItem('romantic_pdf_size', data.pdf_size || '0');
+          AppState.pdfBinary = base64ToUint8Array(data.pdf_data);
+          AppState.pdfLoaded = false;
+          needsRerender = true;
+        }
+      } else {
+        if (localStorage.getItem('romantic_pdf')) {
+          localStorage.removeItem('romantic_pdf');
+          localStorage.removeItem('romantic_pdf_name');
+          localStorage.removeItem('romantic_pdf_size');
+          AppState.pdfBinary = null;
+          AppState.pdfLoaded = false;
+          needsRerender = true;
+        }
+      }
+
+      if (needsRerender) {
+        renderActiveFileDetails();
+      }
+    })
+    .catch(err => {
+      console.warn('Could not sync state from server (standalone/offline fallback mode active):', err);
+    });
+}
+
 // Initialize application events
 document.addEventListener('DOMContentLoaded', () => {
+  // Sync state from Express backend to overcome iframe storage partitioning
+  syncStateFromServer();
+
   // Initialize new features: Love Gate, Promise Drawer, Diagnostics
   initLoveGate();
   initPromisesDrawer();
@@ -1257,7 +1383,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const storedPhotoBase64 = localStorage.getItem('romantic_photo');
   const polaroidImg = document.getElementById('polaroid-img');
   if (storedPhotoBase64 && polaroidImg) {
-    if (storedPhotoBase64.startsWith('data:')) {
+    if (storedPhotoBase64.startsWith('data:') || storedPhotoBase64.startsWith('http://') || storedPhotoBase64.startsWith('https://')) {
       polaroidImg.src = storedPhotoBase64;
     } else {
       polaroidImg.src = `data:image/jpeg;base64,${storedPhotoBase64}`;
@@ -1429,6 +1555,56 @@ document.addEventListener('DOMContentLoaded', () => {
   const deletePhotoBtn = document.getElementById('delete-photo-btn');
   if (deletePhotoBtn) {
     deletePhotoBtn.addEventListener('click', deletePhoto);
+  }
+
+  // Save Direct Photo URL event handler
+  const savePhotoUrlBtn = document.getElementById('save-photo-url-btn');
+  const photoUrlInput = document.getElementById('photo-url-input');
+  if (savePhotoUrlBtn && photoUrlInput) {
+    savePhotoUrlBtn.addEventListener('click', () => {
+      const url = photoUrlInput.value.trim();
+      if (!url) {
+        alert('Please enter a valid image URL.');
+        return;
+      }
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        alert('Please enter a secure URL starting with http:// or https://');
+        return;
+      }
+
+      showToast('Applying custom photo link...');
+      localStorage.setItem('romantic_photo', url);
+      localStorage.setItem('romantic_photo_name', 'Online Image Link');
+
+      // Update main page photo instantly
+      const polaroidImg = document.getElementById('polaroid-img');
+      if (polaroidImg) {
+        polaroidImg.src = url;
+      }
+
+      renderActiveFileDetails();
+      showToast('✓ Photo URL applied successfully!');
+      photoUrlInput.value = '';
+
+      // Sync with full-stack backend
+      fetch('/api/upload-photo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          data: url,
+          name: 'Online Image Link'
+        })
+      })
+      .then(res => res.json())
+      .then(() => {
+        console.log('✓ Photo URL synced to server database.');
+      })
+      .catch(err => {
+        console.warn('Could not sync photo URL to server:', err);
+      });
+    });
   }
   
   // Checking current hash & routing
