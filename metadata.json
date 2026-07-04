@@ -1,0 +1,6 @@
+{
+  "name": "Romantic Letter Website",
+  "description": "An elegant, luxurious, and emotional romantic letter website with an integrated PDF reader, admin panel, music, and background effects.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

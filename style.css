@@ -1,0 +1,277 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Poppins", sans-serif;
+  --font-handwriting: "Great Vibes", cursive;
+  
+  --color-cream: #FFF8EF;
+  --color-gold: #D4AF37;
+  --color-gold-hover: #C5A028;
+  --color-blush: #F7D7D9;
+  --color-romantic-red: #D23B4E;
+  --color-dark-bg: #12100E;
+  --color-dark-card: rgba(26, 21, 18, 0.7);
+}
+
+/* Custom Romantic Styles */
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-sans);
+}
+
+body {
+  transition: background-color 0.8s ease, color 0.8s ease;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Classes */
+.glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 12px 40px -10px rgba(18, 16, 14, 0.08);
+}
+
+.dark .glass-card {
+  background: rgba(26, 21, 18, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+.glass-nav {
+  background: rgba(255, 254, 252, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.dark .glass-nav {
+  background: rgba(18, 16, 14, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+/* Luxury Glows and Shadows */
+.gold-glow {
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
+}
+
+.gold-text-glow {
+  text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.pink-glow {
+  box-shadow: 0 0 25px rgba(247, 215, 217, 0.4);
+}
+
+/* Custom Page transitions */
+.fade-out {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hide element but keep in layout for transitions */
+.hidden-section {
+  display: none !important;
+}
+
+/* Custom PDF Viewer CSS */
+#pdf-canvas-container {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px dashed rgba(212, 175, 55, 0.15);
+  transition: transform 0.4s ease;
+}
+
+.pdf-page-transition-next {
+  animation: pageTurnNext 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+}
+
+.pdf-page-transition-prev {
+  animation: pageTurnPrev 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+}
+
+@keyframes pageTurnNext {
+  0% {
+    opacity: 1;
+    transform: rotateY(0deg) scale(1);
+    transform-origin: left center;
+  }
+  50% {
+    opacity: 0.5;
+    transform: rotateY(-90deg) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateY(0deg) scale(1);
+  }
+}
+
+@keyframes pageTurnPrev {
+  0% {
+    opacity: 1;
+    transform: rotateY(0deg) scale(1);
+    transform-origin: right center;
+  }
+  50% {
+    opacity: 0.5;
+    transform: rotateY(90deg) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateY(0deg) scale(1);
+  }
+}
+
+/* Floating Elements Keyframes */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.15);
+  }
+}
+
+.pulse-glow {
+  animation: pulseGlow 4s infinite ease-in-out;
+}
+
+/* Loading animations */
+.loader-heart {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  transform: rotate(45deg);
+  transform-origin: 40px 40px;
+}
+.loader-heart div {
+  top: 32px;
+  left: 32px;
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background: var(--color-romantic-red);
+  border-radius: 50% 50% 0 0;
+  animation: loader-heart 1.2s infinite cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+.loader-heart div:before {
+  content: " ";
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background: var(--color-romantic-red);
+  left: -16px;
+  border-radius: 50% 0 0 50%;
+}
+.loader-heart div:after {
+  content: " ";
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background: var(--color-romantic-red);
+  top: -16px;
+  border-radius: 50% 50% 0 0;
+}
+@keyframes loader-heart {
+  0% {
+    transform: scale(0.95);
+  }
+  5.2% {
+    transform: scale(1.1);
+  }
+  10.4% {
+    transform: scale(0.98);
+  }
+  15.6% {
+    transform: scale(1.2);
+  }
+  20.8% {
+    transform: scale(0.98);
+  }
+  26% {
+    transform: scale(1.05);
+  }
+  31.2% {
+    transform: scale(0.95);
+  }
+  36.4% {
+    transform: scale(0.98);
+  }
+  41.6% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(0.95);
+  }
+}
+
+/* Custom Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(18, 16, 14, 0.02);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.6);
+}
+
+/* Palace Gates Interactive Entrance Classes */
+.slide-left {
+  transform: translateX(-100%) !important;
+  opacity: 0 !important;
+}
+
+.slide-right {
+  transform: translateX(100%) !important;
+  opacity: 0 !important;
+}
+
+.lock-disappear {
+  transform: scale(1.6) rotate(180deg) !important;
+  opacity: 0 !important;
+  filter: blur(10px);
+}
+
+.gate-fade-out {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom Hide Scrollbar for logs */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+

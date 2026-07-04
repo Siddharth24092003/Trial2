@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For My Bauaa ❤️</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="bg-cream text-stone-800 dark:bg-dark-bg dark:text-stone-200 min-h-screen relative flex flex-col justify-between selection:bg-blush selection:text-romantic-red overflow-x-hidden">
+
+  <!-- THE ROYAL LOVE PALACE GATE -->
+  <div id="love-gate" class="fixed inset-0 w-full h-full z-[9999] overflow-hidden flex items-center justify-center bg-stone-950">
+    <!-- Left Grand Door -->
+    <div id="gate-door-left" class="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-br from-stone-950 via-rose-950 to-stone-900 border-r border-gold/20 flex flex-col items-end justify-center pr-8 md:pr-20 transition-all duration-1000 ease-out z-10 shadow-[5px_0_30px_rgba(0,0,0,0.5)]">
+      <!-- Ornate Gold Filigree Left -->
+      <div class="absolute inset-y-0 left-0 w-8 md:w-16 bg-gradient-to-r from-gold/15 to-transparent border-r border-gold/10 pointer-events-none"></div>
+      <div class="font-serif italic text-7xl md:text-9xl text-gold/5 absolute left-12 md:left-24 font-bold select-none pointer-events-none">B</div>
+    </div>
+    
+    <!-- Right Grand Door -->
+    <div id="gate-door-right" class="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-bl from-stone-950 via-rose-950 to-stone-900 border-l border-gold/20 flex flex-col items-start justify-center pl-8 md:pl-20 transition-all duration-1000 ease-out z-10 shadow-[-5px_0_30px_rgba(0,0,0,0.5)]">
+      <!-- Ornate Gold Filigree Right -->
+      <div class="absolute inset-y-0 right-0 w-8 md:w-16 bg-gradient-to-l from-gold/15 to-transparent border-l border-gold/10 pointer-events-none"></div>
+      <div class="font-serif italic text-7xl md:text-9xl text-gold/5 absolute right-12 md:right-24 font-bold select-none pointer-events-none">M</div>
+    </div>
+
+    <!-- Center Grand Arch and Lock (Overlaid in middle) -->
+    <div id="gate-content" class="relative z-20 flex flex-col items-center justify-center p-6 text-center max-w-lg transition-all duration-1000">
+      <!-- Grand Royal Heart Lock Emblem -->
+      <div id="gate-lock-wrapper" class="relative mb-8 group cursor-pointer transition-transform duration-500 hover:scale-110 active:scale-95">
+        <!-- Golden Glowing Arch Aura -->
+        <div class="absolute inset-0 rounded-full bg-gold/15 blur-2xl scale-125 pulse-glow"></div>
+        <div class="w-24 h-24 md:w-28 md:h-28 rounded-full bg-stone-900 border-2 border-gold flex items-center justify-center shadow-2xl relative z-10">
+          <i id="gate-lock-icon" class="fas fa-heart text-romantic-red text-4xl md:text-5xl animate-pulse"></i>
+          <!-- Keyhole icon -->
+          <div class="absolute bottom-5 w-3 h-4 bg-gold rounded-full flex flex-col items-center">
+            <div class="w-1 h-3 bg-gold mt-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="font-serif text-4xl md:text-6xl text-gold font-bold tracking-wider uppercase mb-3 gold-text-glow">
+        Palace of Love
+      </h2>
+      <div class="h-[1px] w-24 bg-gradient-to-r from-transparent via-gold to-transparent mb-4"></div>
+      <p class="font-serif italic text-stone-300 text-sm md:text-base max-w-md leading-relaxed mb-8 select-none">
+        "Welcome, my beautiful Bauaa. Unlocked only by our hearts."
+      </p>
+
+      <button id="enter-palace-btn" class="px-8 py-4 bg-gradient-to-r from-gold via-amber-500 to-gold hover:from-gold-hover hover:to-gold-hover text-stone-950 font-bold rounded-full shadow-2xl hover:shadow-gold/40 hover:scale-105 active:scale-95 transition-all duration-300 tracking-widest uppercase text-xs border border-gold/30 cursor-pointer relative overflow-hidden group">
+        <span class="relative z-10 flex items-center gap-2">
+          Unlock & Enter Palace <i class="fas fa-key text-stone-900"></i>
+        </span>
+        <div class="absolute inset-0 bg-white/20 transform -skew-x-12 translate-x-full group-hover:translate-x-[-150%] transition-transform duration-1000 ease-out"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Interactive Particles Canvas -->
+  <canvas id="particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+  <!-- Top Floating Controls -->
+  <header class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex justify-between items-center glass-nav">
+    <div class="flex items-center gap-2">
+      <span class="font-serif italic text-lg tracking-wider text-gold font-semibold gold-text-glow">Bauaa & Me</span>
+    </div>
+    
+    <div class="flex items-center gap-4">
+      <!-- Mute/Unmute Control -->
+      <button id="music-btn" class="w-10 h-10 rounded-full flex items-center justify-center border border-gold/30 hover:border-gold hover:text-gold transition-all duration-300 bg-white/40 dark:bg-black/30 backdrop-blur-md cursor-pointer" title="Toggle Romantic Music">
+        <i class="fas fa-music text-sm text-gold"></i>
+      </button>
+      
+      <!-- Theme Switcher -->
+      <button id="theme-btn" class="w-10 h-10 rounded-full flex items-center justify-center border border-gold/30 hover:border-gold hover:text-gold transition-all duration-300 bg-white/40 dark:bg-black/30 backdrop-blur-md cursor-pointer" title="Toggle Appearance">
+        <i class="fas fa-moon text-sm text-gold"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-grow flex items-center justify-center px-4 pt-24 pb-12 z-10 relative">
+    
+    <!-- 1. LANDING HERO VIEW -->
+    <section id="landing-view" class="w-full max-w-2xl text-center flex flex-col items-center justify-center transition-all duration-800 fade-in">
+      <!-- Beautiful Polaroid of Bauaa -->
+      <div id="polaroid-container" class="relative mb-8 mt-4 group cursor-pointer transition-all duration-700 hover:scale-[1.03] active:scale-95 select-none z-10">
+        <!-- Heart Push Pin -->
+        <div class="absolute -top-5 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center select-none pointer-events-none filter drop-shadow-md">
+          <div class="w-3.5 h-3.5 rounded-full bg-romantic-red relative shadow-lg"></div>
+          <div class="w-1 h-3.5 bg-zinc-400 dark:bg-zinc-600 -mt-0.5"></div>
+        </div>
+        
+        <!-- Polaroid Frame -->
+        <div class="bg-white dark:bg-stone-900 p-4 pb-5 rounded-sm shadow-xl border border-stone-200/50 dark:border-stone-800/80 transform rotate-[-3deg] hover:rotate-[1deg] transition-all duration-500 ease-out w-64 md:w-72">
+          <!-- Image Wrapper with soft overlay -->
+          <div class="relative aspect-square w-full overflow-hidden bg-stone-100 rounded-sm border border-stone-100 dark:border-stone-800 group-hover:shadow-inner transition-shadow duration-500">
+            <img 
+              id="polaroid-img"
+              src="/src/assets/images/bauaa_portrait_1783140747687.jpg" 
+              alt="My Beautiful Bauaa" 
+              class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 filter contrast-[1.02] brightness-[1.01]" 
+              referrerpolicy="no-referrer"
+            />
+            <!-- Ambient romantic overlay on hover -->
+            <div class="absolute inset-0 bg-gradient-to-t from-romantic-red/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+          </div>
+          
+          <!-- Handwritten Caption -->
+          <div class="mt-4 text-center select-none">
+            <p class="font-handwriting text-3xl text-romantic-red dark:text-rose-400 tracking-wide">My Beautiful Bauaa ❤️</p>
+            <p class="text-[10px] uppercase font-sans tracking-widest text-stone-400 dark:text-stone-500 mt-1">Aaha humar sabkuch chii babu</p>
+          </div>
+        </div>
+        
+        <!-- Floating sparkles around Polaroid -->
+        <div class="absolute -top-1 -right-3 text-gold animate-pulse text-sm">
+          <i class="fas fa-sparkles"></i>
+        </div>
+        <div class="absolute -bottom-2 -left-3 text-romantic-red animate-pulse text-xs delay-300">
+          <i class="fas fa-heart"></i>
+        </div>
+      </div>
+      
+      <h1 class="font-serif text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4 text-stone-900 dark:text-white leading-tight">
+        For My <span class="text-romantic-red">Bauaa</span> <span class="inline-block animate-pulse">❤️</span>
+      </h1>
+      
+      <p class="font-serif italic text-lg md:text-xl text-stone-600 dark:text-stone-400 max-w-lg mx-auto mb-10 leading-relaxed">
+        "A small corner of my heart, made just for you."
+      </p>
+      
+      <button id="open-letter-btn" class="px-8 py-4 bg-gradient-to-r from-gold to-amber-500 hover:from-gold-hover hover:to-amber-600 text-white font-medium rounded-full shadow-lg hover:shadow-gold/30 hover:scale-105 active:scale-95 transition-all duration-300 tracking-wide gold-glow relative overflow-hidden group cursor-pointer">
+        <span class="relative z-10 flex items-center gap-2 text-base">
+          Open My Letter <i class="fas fa-envelope-open-text"></i>
+        </span>
+        <div class="absolute inset-0 bg-white/20 transform -skew-x-12 translate-x-full group-hover:translate-x-[-150%] transition-transform duration-1000 ease-out"></div>
+      </button>
+
+      <!-- Ornate Heart Divider -->
+      <div class="flex items-center gap-3 my-12 w-full max-w-md mx-auto">
+        <div class="h-[1px] bg-gradient-to-r from-transparent via-gold/30 to-transparent flex-grow"></div>
+        <i class="fas fa-heart text-gold/60 text-xs animate-pulse"></i>
+        <div class="h-[1px] bg-gradient-to-l from-transparent via-gold/30 to-transparent flex-grow"></div>
+      </div>
+
+      <!-- INTERACTIVE SECRET DRAWER OF PROMISES -->
+      <div id="promises-drawer-card" class="w-full max-w-md bg-white/60 dark:bg-stone-900/50 backdrop-blur-md rounded-3xl p-6 border border-gold/15 dark:border-stone-800/80 shadow-xl transition-all duration-500 hover:shadow-2xl">
+        <div class="flex items-center gap-2.5 mb-4 justify-center">
+          <span class="p-1.5 bg-gold/10 rounded-lg text-gold">
+            <i class="fas fa-gift text-sm"></i>
+          </span>
+          <h3 class="font-serif text-xl font-semibold text-stone-950 dark:text-white">Drawer of Promises</h3>
+        </div>
+        <p class="text-xs text-stone-500 dark:text-stone-400 mb-6 max-w-sm mx-auto">
+          Draw a random handwritten promise or secret love note in sweet Maithili, Hindi, or English.
+        </p>
+
+        <!-- Drawn Note Display (Hidden by default, animates open) -->
+        <div id="promise-envelope" class="hidden transform scale-95 opacity-0 transition-all duration-500 bg-amber-50/50 dark:bg-stone-950/45 border border-gold/15 rounded-2xl p-5 mb-6 text-center shadow-inner relative overflow-hidden min-h-[90px] flex items-center justify-center">
+          <div class="absolute -top-10 -right-10 w-20 h-20 bg-gold/5 rounded-full blur-xl pointer-events-none"></div>
+          <div class="absolute -bottom-10 -left-10 w-20 h-20 bg-romantic-red/5 rounded-full blur-xl pointer-events-none"></div>
+          <p id="promise-text" class="font-handwriting text-2xl text-romantic-red dark:text-rose-400 tracking-wide select-none"></p>
+        </div>
+
+        <button id="draw-promise-btn" class="w-full py-3 bg-white/80 dark:bg-stone-950/50 hover:bg-gold/10 dark:hover:bg-gold/10 border border-gold/30 dark:border-gold/20 hover:border-gold text-gold font-semibold rounded-2xl text-xs uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 shadow-sm">
+          <i class="fas fa-sparkles text-xs"></i> Draw a Love Note
+        </button>
+      </div>
+
+      <!-- Ornate Heart Divider 2 -->
+      <div class="flex items-center gap-3 my-12 w-full max-w-md mx-auto">
+        <div class="h-[1px] bg-gradient-to-r from-transparent via-gold/30 to-transparent flex-grow"></div>
+        <i class="fas fa-heart text-gold/60 text-xs animate-pulse"></i>
+        <div class="h-[1px] bg-gradient-to-l from-transparent via-gold/30 to-transparent flex-grow"></div>
+      </div>
+
+      <!-- REAL-TIME INTERACTIVE DIAGNOSTIC TESTS -->
+      <div id="diagnostics-card" class="w-full max-w-md bg-stone-900/95 text-stone-100 rounded-3xl p-6 border border-stone-800 shadow-2xl relative overflow-hidden text-left font-sans">
+        <!-- Technical ambient glowing header -->
+        <div class="flex items-center justify-between border-b border-stone-800 pb-4 mb-5">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+            <div>
+              <h3 class="text-xs uppercase tracking-widest font-mono text-stone-400 font-bold">App Verification Suite</h3>
+              <p class="text-[10px] text-stone-500 font-mono mt-0.5">Instance: Live Environment Check</p>
+            </div>
+          </div>
+          <i class="fas fa-vial text-gold text-sm"></i>
+        </div>
+
+        <!-- Testing List -->
+        <div id="tests-container" class="space-y-3.5 font-mono text-xs">
+          <!-- LocalStorage Check -->
+          <div class="flex items-center justify-between p-2 bg-stone-950/40 rounded-xl border border-stone-800/40">
+            <span class="text-stone-400 flex items-center gap-2"><i class="fas fa-database text-[10px]"></i> LocalStorage Engine</span>
+            <span id="test-status-storage" class="text-[10px] font-bold text-stone-500 uppercase">WAITING</span>
+          </div>
+
+          <!-- YouTube Audio Check -->
+          <div class="flex items-center justify-between p-2 bg-stone-950/40 rounded-xl border border-stone-800/40">
+            <span class="text-stone-400 flex items-center gap-2"><i class="fas fa-music text-[10px]"></i> Romantic Audio Core</span>
+            <span id="test-status-audio" class="text-[10px] font-bold text-stone-500 uppercase">WAITING</span>
+          </div>
+
+          <!-- PDF.js Check -->
+          <div class="flex items-center justify-between p-2 bg-stone-950/40 rounded-xl border border-stone-800/40">
+            <span class="text-stone-400 flex items-center gap-2"><i class="fas fa-file-pdf text-[10px]"></i> PDF.js Renderer API</span>
+            <span id="test-status-pdf" class="text-[10px] font-bold text-stone-500 uppercase">WAITING</span>
+          </div>
+
+          <!-- Particle Engine Check -->
+          <div class="flex items-center justify-between p-2 bg-stone-950/40 rounded-xl border border-stone-800/40">
+            <span class="text-stone-400 flex items-center gap-2"><i class="fas fa-sparkles text-[10px]"></i> Particle Streamer</span>
+            <span id="test-status-particles" class="text-[10px] font-bold text-stone-500 uppercase">WAITING</span>
+          </div>
+
+          <!-- Live Output Console Logs -->
+          <div class="bg-stone-950 p-3 rounded-xl border border-stone-800 h-28 overflow-y-auto text-[10px] leading-relaxed text-green-400 font-mono" id="diagnostic-console">
+            <span class="text-stone-500 font-mono select-none">[SYSTEM] Click button to initialize diagnostic checks...</span>
+          </div>
+        </div>
+
+        <button id="run-diagnostics-btn" class="w-full mt-5 py-3 bg-gradient-to-r from-gold/10 to-gold/25 hover:from-gold/20 hover:to-gold/30 text-gold font-bold rounded-2xl text-[10px] uppercase tracking-widest border border-gold/20 hover:border-gold/40 transition-all duration-300 cursor-pointer flex items-center justify-center gap-2">
+          <i class="fas fa-terminal"></i> Run Live Verification Suite
+        </button>
+      </div>
+    </section>
+
+    <!-- 2. LOADING TRANSITION VIEW -->
+    <section id="loading-view" class="hidden-section w-full max-w-md text-center flex flex-col items-center justify-center opacity-0 transition-all duration-800">
+      <div class="loader-heart mb-6">
+        <div></div>
+      </div>
+      <p class="font-serif italic text-xl text-stone-600 dark:text-stone-400 animate-pulse">
+        Unfolding my heart for you...
+      </p>
+    </section>
+
+    <!-- 3. LETTER VIEW -->
+    <section id="letter-view" class="hidden-section w-full max-w-4xl opacity-0 transition-all duration-800 flex flex-col items-center">
+      
+      <!-- Premium Glass Card containing PDF Loader / Premium PDF Reader -->
+      <div id="letter-card" class="w-full glass-card rounded-3xl p-6 md:p-8 relative overflow-hidden flex flex-col items-center transition-all duration-500 shadow-2xl">
+        
+        <!-- INITIAL READ CARD TRIGGER -->
+        <div id="read-trigger-pane" class="text-center py-16 px-4 flex flex-col items-center max-w-md transition-all duration-500">
+          <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-gold/10 to-gold/30 flex items-center justify-center mb-6 shadow-inner border border-gold/20">
+            <i class="fas fa-envelope-open text-gold text-3xl"></i>
+          </div>
+          <h2 class="font-serif text-3xl font-semibold mb-4 text-stone-900 dark:text-white">Read My Letter ❤️</h2>
+          <p class="text-stone-500 dark:text-stone-400 mb-8 text-sm">
+            I put my deepest emotions into words. Click below to reveal my letter in a cinematic presentation.
+          </p>
+          <button id="start-reading-btn" class="px-8 py-3.5 bg-gradient-to-r from-gold to-amber-500 hover:from-gold-hover hover:to-amber-600 text-white font-medium rounded-full shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center gap-2">
+            Read Letter <i class="fas fa-heart text-romantic-red"></i>
+          </button>
+        </div>
+
+        <!-- PREMIUM PDF READER -->
+        <div id="pdf-reader-pane" class="hidden w-full flex-col">
+          <!-- Reader Toolbar Header -->
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gold/15 pb-4 mb-6">
+            <div class="flex items-center gap-2">
+              <span class="p-2 bg-romantic-red/10 rounded-lg text-romantic-red">
+                <i class="fas fa-heart"></i>
+              </span>
+              <div>
+                <h3 class="font-serif font-medium text-stone-950 dark:text-white text-base">A Letter of Love</h3>
+                <p class="text-[11px] text-stone-500 dark:text-stone-400 font-mono" id="pdf-filename">letter.pdf</p>
+              </div>
+            </div>
+
+            <!-- Interactive Toolbar Controls -->
+            <div class="flex items-center gap-1.5 md:gap-3 bg-white/50 dark:bg-black/20 p-1.5 rounded-full border border-gold/10">
+              <!-- Previous Page -->
+              <button id="prev-page" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gold/10 text-stone-600 dark:text-stone-300 hover:text-gold transition-all duration-200 cursor-pointer" title="Previous Page">
+                <i class="fas fa-chevron-left text-xs"></i>
+              </button>
+              
+              <!-- Page Number Indicator -->
+              <span class="text-xs font-medium text-stone-600 dark:text-stone-300 px-1 font-mono">
+                Page <span id="page-num" class="text-gold font-semibold">1</span> of <span id="page-count" class="text-stone-500">1</span>
+              </span>
+              
+              <!-- Next Page -->
+              <button id="next-page" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gold/10 text-stone-600 dark:text-stone-300 hover:text-gold transition-all duration-200 cursor-pointer" title="Next Page">
+                <i class="fas fa-chevron-right text-xs"></i>
+              </button>
+              
+              <div class="h-4 w-[1px] bg-gold/15"></div>
+
+              <!-- Zoom Out -->
+              <button id="zoom-out" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gold/10 text-stone-600 dark:text-stone-300 hover:text-gold transition-all duration-200 cursor-pointer" title="Zoom Out">
+                <i class="fas fa-search-minus text-xs"></i>
+              </button>
+
+              <!-- Zoom In -->
+              <button id="zoom-in" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gold/10 text-stone-600 dark:text-stone-300 hover:text-gold transition-all duration-200 cursor-pointer" title="Zoom In">
+                <i class="fas fa-search-plus text-xs"></i>
+              </button>
+
+              <div class="h-4 w-[1px] bg-gold/15"></div>
+
+              <!-- Fullscreen -->
+              <button id="fullscreen" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gold/10 text-stone-600 dark:text-stone-300 hover:text-gold transition-all duration-200 cursor-pointer" title="Toggle Fullscreen">
+                <i class="fas fa-expand text-xs"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Canvas Render Area -->
+          <div id="pdf-canvas-container" class="relative group">
+            <!-- Reader Inner Loading Overlay -->
+            <div id="pdf-loader" class="absolute inset-0 bg-stone-100/90 dark:bg-stone-900/90 flex flex-col items-center justify-center z-20 rounded-xl transition-opacity duration-300">
+              <i class="fas fa-spinner fa-spin text-gold text-3xl mb-3"></i>
+              <p class="font-serif italic text-sm text-stone-500">Preparing the page...</p>
+            </div>
+
+            <!-- Canvas Element where PDF page renders -->
+            <canvas id="pdf-canvas" class="max-w-full h-auto mx-auto shadow-inner rounded-xl bg-white"></canvas>
+          </div>
+
+          <!-- Reader Footer Controls -->
+          <div class="flex flex-col md:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-gold/10">
+            <!-- Read Again button -->
+            <button id="read-again" class="text-sm font-medium text-stone-500 hover:text-romantic-red transition-all duration-300 cursor-pointer flex items-center gap-1.5 order-2 md:order-1">
+              <i class="fas fa-redo text-xs"></i> Read Again
+            </button>
+
+            <!-- Gold Premium Download button -->
+            <a id="download-letter" target="_blank" rel="noopener" class="px-6 py-2.5 bg-gradient-to-r from-gold to-amber-500 hover:from-gold-hover hover:to-amber-600 text-white font-medium rounded-full shadow-md hover:shadow-gold/20 hover:scale-[1.02] transition-all duration-300 cursor-pointer flex items-center gap-2 order-1 md:order-2 text-sm no-underline">
+              <i class="fas fa-file-download"></i> Download My Letter
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Back navigation -->
+      <button id="back-to-home" class="mt-8 px-6 py-2 border border-gold/25 text-gold hover:bg-gold/5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer">
+        <i class="fas fa-arrow-left mr-1.5"></i> Back to Start
+      </button>
+
+    </section>
+
+    <!-- 4. ADMIN CONSOLE VIEW -->
+    <section id="admin-view" class="hidden-section w-full max-w-4xl opacity-0 transition-all duration-800 flex flex-col items-center">
+      
+      <!-- 1. LOCK SCREEN / AUTHENTICATION -->
+      <div id="lock-screen" class="w-full max-w-md bg-white/70 dark:bg-stone-900/80 backdrop-blur-xl rounded-3xl p-8 border border-gold/15 dark:border-stone-800/80 shadow-2xl transition-all duration-800">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-gold/10 to-gold/30 flex items-center justify-center mx-auto mb-4 border border-gold/20 shadow-inner">
+            <i class="fas fa-lock text-gold text-2xl"></i>
+          </div>
+          <h2 class="font-serif text-3xl font-bold text-stone-950 dark:text-white">Admin Access</h2>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-2">Enter your secure love passcode to configure options.</p>
+        </div>
+        
+        <form id="login-form" class="space-y-6">
+          <div class="space-y-2">
+            <label for="password-input" class="text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">Passcode</label>
+            <div class="relative">
+              <input 
+                type="password" 
+                id="password-input" 
+                placeholder="Enter passcode..."
+                class="w-full px-4 py-3 bg-stone-50/55 dark:bg-stone-950/40 border border-stone-200 dark:border-stone-800 rounded-xl focus:outline-none focus:border-gold dark:focus:border-gold transition-colors duration-300 pr-10 font-sans text-sm text-stone-900 dark:text-white"
+                required
+              />
+              <button 
+                type="button" 
+                id="toggle-visible" 
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 cursor-pointer p-1"
+              >
+                <i class="fas fa-eye text-xs"></i>
+              </button>
+            </div>
+            <p id="error-msg" class="text-xs text-romantic-red font-medium hidden">Incorrect passcode! Please try again.</p>
+          </div>
+          
+          <button 
+            type="submit" 
+            class="w-full py-3.5 bg-gradient-to-r from-gold to-amber-500 hover:from-gold-hover hover:to-amber-600 text-white font-medium rounded-xl shadow-lg hover:shadow-gold/20 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 text-sm"
+          >
+            Authenticate <i class="fas fa-arrow-right text-xs"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- 2. ADMIN DASHBOARD -->
+      <div id="dashboard" class="hidden-section w-full opacity-0 transition-all duration-800 grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Left Column: Letter Configuration -->
+        <div class="bg-white/70 dark:bg-stone-900/80 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-gold/15 dark:border-stone-800/80 shadow-2xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="font-serif text-2xl font-bold text-stone-950 dark:text-white flex items-center gap-2">
+                <i class="fas fa-envelope-open-text text-gold text-lg"></i> Custom Letter PDF
+              </h3>
+              <span id="source-badge" class="text-[10px] font-mono font-bold bg-gold/15 text-gold border border-gold/25 px-2.5 py-0.5 rounded-full uppercase">
+                Fallback Default
+              </span>
+            </div>
+            
+            <p class="text-sm text-stone-500 dark:text-stone-400 mb-6">
+              Upload your custom PDF letter for Bauaa. It will immediately replace the default preset letter shown in the cinematic PDF reader.
+            </p>
+            
+            <!-- File Details -->
+            <div class="p-4 bg-stone-50/50 dark:bg-stone-950/40 rounded-xl border border-stone-100 dark:border-stone-800/60 flex items-center justify-between mb-8">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-red-50 dark:bg-red-950/20 flex items-center justify-center border border-red-200/40 dark:border-red-900/30">
+                  <i class="fas fa-file-pdf text-red-500 text-lg"></i>
+                </div>
+                <div class="min-w-0">
+                  <p id="details-filename" class="text-sm font-semibold truncate text-stone-800 dark:text-stone-200">dear_bauaa.pdf</p>
+                  <p id="details-filesize" class="text-xs text-stone-400 dark:text-stone-500">Size: 609 bytes</p>
+                </div>
+              </div>
+              
+              <button id="delete-letter-btn" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-romantic-red/10 text-stone-400 hover:text-romantic-red transition-colors duration-200 cursor-pointer" title="Revert to Default">
+                <i class="fas fa-trash-can text-sm"></i>
+              </button>
+            </div>
+            
+            <!-- Drag & Drop PDF Zone -->
+            <div id="drop-zone" class="border-2 border-dashed border-stone-200 dark:border-stone-800 rounded-2xl p-8 text-center hover:border-gold dark:hover:border-gold hover:bg-gold/5 transition-all duration-300 cursor-pointer flex flex-col items-center justify-center">
+              <input type="file" id="file-input" class="hidden" accept="application/pdf" />
+              <i class="fas fa-cloud-arrow-up text-gold text-3xl mb-3 animate-bounce"></i>
+              <p class="text-sm font-semibold text-stone-800 dark:text-stone-200 mb-1">Drag & Drop PDF file here</p>
+              <p class="text-xs text-stone-400 dark:text-stone-500 mb-4">or browse files from device</p>
+              <button id="browse-btn" type="button" class="px-5 py-2 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 text-xs font-semibold rounded-full shadow-sm transition-colors duration-200 cursor-pointer">
+                Browse PDF
+              </button>
+            </div>
+          </div>
+          
+          <div class="mt-8 pt-6 border-t border-stone-100 dark:border-stone-800/80 flex justify-between items-center text-xs text-stone-400">
+            <span>Max File Size: 15MB</span>
+            <span>Formats supported: PDF</span>
+          </div>
+        </div>
+        
+        <!-- Right Column: Custom Photo Configuration -->
+        <div class="bg-white/70 dark:bg-stone-900/80 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-gold/15 dark:border-stone-800/80 shadow-2xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="font-serif text-2xl font-bold text-stone-950 dark:text-white flex items-center gap-2">
+                <i class="fas fa-camera text-gold text-lg"></i> Custom Photo of Bauaa
+              </h3>
+              <span id="photo-status-badge" class="text-[10px] font-mono font-bold bg-gold/15 text-gold border border-gold/25 px-2.5 py-0.5 rounded-full uppercase">
+                Fallback Default
+              </span>
+            </div>
+            
+            <p class="text-sm text-stone-500 dark:text-stone-400 mb-6">
+              Upload the actual/real photo of Bauaa. It will immediately replace the AI-generated picture inside the beautiful Polaroid frame on the landing page!
+            </p>
+            
+            <!-- Photo Details & Preview -->
+            <div class="p-4 bg-stone-50/50 dark:bg-stone-950/40 rounded-xl border border-stone-100 dark:border-stone-800/60 flex items-center justify-between mb-8">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-12 h-12 rounded-lg bg-stone-100 dark:bg-stone-800 overflow-hidden border border-stone-200 dark:border-stone-700 flex-shrink-0 flex items-center justify-center">
+                  <img id="photo-preview" src="/src/assets/images/bauaa_portrait_1783140747687.jpg" alt="Preview" class="w-full h-full object-cover" />
+                </div>
+                <div class="min-w-0">
+                  <p id="photo-filename" class="text-sm font-semibold truncate text-stone-800 dark:text-stone-200">bauaa_portrait.jpg</p>
+                  <p class="text-xs text-stone-400 dark:text-stone-500">Real Image Display</p>
+                </div>
+              </div>
+              
+              <button id="delete-photo-btn" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-romantic-red/10 text-stone-400 hover:text-romantic-red transition-colors duration-200 cursor-pointer" title="Revert to Default Image">
+                <i class="fas fa-trash-can text-sm"></i>
+              </button>
+            </div>
+            
+            <!-- Drag & Drop Photo Zone -->
+            <div id="photo-drop-zone" class="border-2 border-dashed border-stone-200 dark:border-stone-800 rounded-2xl p-8 text-center hover:border-gold dark:hover:border-gold hover:bg-gold/5 transition-all duration-300 cursor-pointer flex flex-col items-center justify-center">
+              <input type="file" id="photo-file-input" class="hidden" accept="image/*" />
+              <i class="fas fa-image text-gold text-3xl mb-3"></i>
+              <p class="text-sm font-semibold text-stone-800 dark:text-stone-200 mb-1">Drag & Drop her actual photo here</p>
+              <p class="text-xs text-stone-400 dark:text-stone-500 mb-4">JPG, PNG or WEBP formats</p>
+              <button id="photo-browse-btn" type="button" class="px-5 py-2 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 text-xs font-semibold rounded-full shadow-sm transition-colors duration-200 cursor-pointer">
+                Browse Image
+              </button>
+            </div>
+          </div>
+          
+          <div class="mt-8 pt-6 border-t border-stone-100 dark:border-stone-800/80 flex justify-between items-center text-xs text-stone-400">
+            <span>Max File Size: 10MB</span>
+            <span>Formats supported: JPG, PNG, WEBP</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Control Actions -->
+      <div id="bottom-actions" class="hidden-section w-full max-w-xs mx-auto mt-10 text-center relative flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a href="#" class="px-6 py-2.5 border border-gold/25 text-gold hover:bg-gold/5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center gap-1.5 justify-center w-36">
+          <i class="fas fa-home text-xs"></i> Go Home
+        </a>
+        <button id="logout-btn" class="px-6 py-2.5 border border-romantic-red/20 text-romantic-red hover:bg-romantic-red/5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center gap-1.5 justify-center w-36">
+          <i class="fas fa-power-off text-xs"></i> Sign Out
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Toast Notification Wrapper -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-10 opacity-0 transition-all duration-500 pointer-events-none">
+    <div class="bg-stone-900/90 dark:bg-stone-50/95 text-stone-100 dark:text-stone-900 px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 border border-stone-800 dark:border-stone-200/50">
+      <div class="w-2 h-2 rounded-full bg-gold animate-ping"></div>
+      <p id="toast-message" class="text-sm font-medium tracking-wide">Action completed successfully.</p>
+    </div>
+  </div>
+
+  <!-- Elegant Footer -->
+  <footer class="w-full text-center py-6 px-4 border-t border-gold/10 z-10 relative">
+    <p class="font-serif italic text-xs text-stone-500 dark:text-stone-400">
+      Made with eternal love for my Bauaa.
+    </p>
+  </footer>
+
+  <!-- Custom Scripts -->
+  <script type="module" src="/script.js"></script>
+</body>
+</html>
